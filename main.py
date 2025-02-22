@@ -3,7 +3,7 @@ import sys
 
 import requests
 from PyQt6.QtGui import QPixmap
-from PyQt6.QtWidgets import QMainWindow,QApplication, QWidget, QLabel, QGridLayout
+from PyQt6.QtWidgets import QMainWindow, QApplication, QWidget, QLabel, QGridLayout, QPushButton
 from PyQt6.QtCore import Qt
 
 SCREEN_SIZE = [600, 600]
@@ -15,6 +15,7 @@ class Example(QWidget):
         self.lon = 37.530887
         self.lat = 55.703118
         self.zoom = 5
+        self.theme = "light"
         self.delta = "0.002,0.002"
         self.initUI()
         self.getImage()
@@ -27,7 +28,8 @@ class Example(QWidget):
             # позиционируем карту центром на наш исходный адрес
             "ll": ",".join([str(self.lon),str(self.lat)]),
             "apikey": api_key,
-            "z": self.zoom
+            "z": self.zoom,
+            "theme": self.theme
         }
 
         response = requests.get(server_address, params=map_params)
@@ -56,6 +58,17 @@ class Example(QWidget):
         self.image = QLabel(self)
         self.image.move(0, 0)
         self.image.resize(600, 450)
+        self.btntheme = QPushButton(self)
+        self.btntheme.move(10, 530)
+        self.btntheme.setText("Сменить тему")
+        self.btntheme.clicked.connect(self.changeTheme)
+
+    def changeTheme(self):
+        if self.theme == "light":
+            self.theme = "dark"
+        else:
+            self.theme = "light"
+        self.getImage()
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key.Key_PageUp and self.zoom < 21:
