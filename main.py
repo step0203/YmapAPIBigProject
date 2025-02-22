@@ -12,8 +12,8 @@ SCREEN_SIZE = [600, 600]
 class Example(QWidget):
     def __init__(self):
         super().__init__()
-        self.lon = "37.530887"
-        self.lat = "55.703118"
+        self.lon = 37.530887
+        self.lat = 55.703118
         self.zoom = 5
         self.delta = "0.002,0.002"
         self.initUI()
@@ -25,7 +25,7 @@ class Example(QWidget):
         api_key = 'f5e8d0d9-e8bf-40fb-8f03-b0f301319c2a'
         map_params = {
             # позиционируем карту центром на наш исходный адрес
-            "ll": ",".join([self.lon,self.lat]),
+            "ll": ",".join([str(self.lon),str(self.lat)]),
             "apikey": api_key,
             "z": self.zoom
         }
@@ -60,10 +60,18 @@ class Example(QWidget):
     def keyPressEvent(self, event):
         if event.key() == Qt.Key.Key_PageUp and self.zoom < 21:
             self.zoom += 1
-            self.getImage()
         if event.key() == Qt.Key.Key_PageDown and self.zoom > 0:
             self.zoom -= 1
-            self.getImage()
+        if event.key() == Qt.Key.Key_Left and self.lon > 0:
+            self.lon -= 1
+        if event.key() == Qt.Key.Key_Right and self.lon < 180:
+            self.lon += 1
+        if event.key() == Qt.Key.Key_Down and self.lat > 0:
+            self.lat -= 1
+        if event.key() == Qt.Key.Key_Up and self.lat < 180:
+            self.lat += 1
+        self.getImage()
+
 
 
     def closeEvent(self, event):
